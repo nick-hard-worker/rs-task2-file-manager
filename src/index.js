@@ -1,6 +1,12 @@
-import * as cliOutput from './cliOutput.js';
+import os from 'node:os';
+import path from 'node:path';
+import * as readline from 'node:readline/promises';
+import * as cliOutput from './utils/cliOutput.js';
+import { parseArgs, parseCmd } from './utils/parser.js';
+
 
 let userName;
+let currentFolder;
 const args = parseArgs();
 if (!args.username) {
   cliOutput.startError();
@@ -9,19 +15,20 @@ if (!args.username) {
 
 userName = args.username;
 cliOutput.greeting(userName);
+currentFolder = path.resolve(os.homedir());
+console.log(currentFolder);
 
+const rlOps = { input: process.stdin, output: process.stdout };
+const rl = readline.createInterface(rlOps);
 
+// const answer = await rl.question('What do you think of Node.js? ');
+// console.log(`Thank you for your valuable feedback: ${answer}`);
 
-function parseArgs() {
-  const [node, file, ...args] = process.argv;
+rl.on('line', (input) => {
+  const cmd = parseCmd(input);
+  console.log('Received: ', cmd);
+});
+// rl.close();
 
-  const orderedArgs = {};
-  for (let i = 0; i < args.length; i++) {
-    const delimiterIndex = args[i].indexOf('=');
-    const key = args[i].substring(2, delimiterIndex);
-    const value = args[i].substring(delimiterIndex + 1);
-    orderedArgs[key] = value;
-    // console.log(`${key} is ${value}`);
-  }
-  return orderedArgs;
-};
+// console.dir(os.homedir(), os.userInfo());
+// console.dir(os.userInfo());
