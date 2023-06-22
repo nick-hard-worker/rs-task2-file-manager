@@ -6,4 +6,8 @@ const startError = () => {
   console.log('invalid start application, please use: --username=your_name');
 };
 
-export { greeting, startError };
+const currentPath = (folderPath) => {
+  console.log(`You are currently in ${folderPath}`);
+};
+
+export { greeting, startError, currentPath };
