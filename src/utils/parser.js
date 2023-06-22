@@ -16,7 +16,7 @@ const parseCmd = (line) => {
   const arrFromLine = line.split(' ');
   return {
     command: arrFromLine[0],
-    arg1: arrFromLine[1],
+    arg1: arrFromLine[1]?.replace(/^--/, ''),
     arg2: arrFromLine[2]
   };
 };

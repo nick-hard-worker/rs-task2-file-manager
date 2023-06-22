@@ -3,20 +3,16 @@ import path from 'node:path';
 import * as readline from 'node:readline/promises';
 import * as cliOutput from './utils/cliOutput.js';
 import { parseArgs, parseCmd } from './utils/parser.js';
+import { osInfo } from './osCmd.js';
 
 
-let userName;
 let currentFolder;
 const args = parseArgs();
-if (!args.username) {
-  cliOutput.startError();
-  process.exit(0);
-}
-
-userName = args.username;
+const userName = args.username || 'Anonymous';
 cliOutput.greeting(userName);
+
 currentFolder = path.resolve(os.homedir());
-console.log(currentFolder);
+console.log(`You are currently in ${currentFolder}`);
 
 const rlOps = { input: process.stdin, output: process.stdout };
 const rl = readline.createInterface(rlOps);
@@ -26,7 +22,8 @@ const rl = readline.createInterface(rlOps);
 
 rl.on('line', (input) => {
   const cmd = parseCmd(input);
-  console.log('Received: ', cmd);
+  // console.log('Received: ', cmd);
+  if (cmd.command === 'os') console.log(osInfo(cmd));
 });
 // rl.close();
 
