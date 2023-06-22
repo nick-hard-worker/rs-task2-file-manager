@@ -2,12 +2,12 @@ const greeting = (username) => {
   console.log(`Welcome to the File Manager, ${username}!`);
 };
 
-const startError = () => {
-  console.log('invalid start application, please use: --username=your_name');
+const invalidInput = () => {
+  console.log('Invalid input');
 };
 
 const currentPath = (folderPath) => {
   console.log(`You are currently in ${folderPath}`);
 };
 
-export { greeting, startError, currentPath };
+export { greeting, invalidInput, currentPath };
