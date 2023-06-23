@@ -10,6 +10,7 @@ import { osInfo } from './command-handlers/osCmd.js';
 import { calculateHash } from './command-handlers/calcHash.js';
 import { archive } from './command-handlers/archive.js';
 import { navigate, navCommandsList } from './command-handlers/fs-navigate.js';
+import { fsAction, fsActionList } from './command-handlers/fs-action.js';
 
 const args = parseArgs();
 const userName = args.username || 'Anonymous';
@@ -40,6 +41,13 @@ rl.on('line', async (input) => {
 
     if (navCommandsList.includes(cmd.command)) {
       currentFolder = await navigate(cmd.command, currentFolder, cmd.arg1);
+    };
+
+    if (fsActionList.includes(cmd.command)) {
+      const sourcePath = getAbsolutePath(currentFolder, cmd.arg1 || '');
+      const targetPath = getAbsolutePath(currentFolder, cmd.arg2 || '');
+
+      await fsAction(cmd.command, sourcePath, targetPath);
     };
 
     cliOutput.currentPath(currentFolder);
