@@ -19,7 +19,8 @@ cliOutput.greeting(userName);
 let currentFolder = path.resolve(os.homedir());
 cliOutput.currentPath(currentFolder);
 
-const rl = readline.createInterface(process.stdin);
+const rlOps = { input: process.stdin, output: process.stdout };
+const rl = readline.createInterface(rlOps);
 
 rl.on('line', async (input) => {
   try {
