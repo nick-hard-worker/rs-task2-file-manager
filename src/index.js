@@ -9,6 +9,7 @@ import { getAbsolutePath } from './utils/get-absolute-path.js';
 import { osInfo } from './command-handlers/osCmd.js';
 import { calculateHash } from './command-handlers/calcHash.js';
 import { archive } from './command-handlers/archive.js';
+import { navigate, navCommandsList } from './command-handlers/fs-navigate.js';
 
 const args = parseArgs();
 const userName = args.username || 'Anonymous';
@@ -36,6 +37,10 @@ rl.on('line', async (input) => {
 
       await archive(cmd.command, sourcePath, targetPath);
     }
+
+    if (navCommandsList.includes(cmd.command)) {
+      currentFolder = await navigate(cmd.command, currentFolder, cmd.arg1);
+    };
 
     cliOutput.currentPath(currentFolder);
   }

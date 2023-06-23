@@ -1,0 +1,53 @@
+import * as fs from 'node:fs/promises';
+import path from 'node:path';
+
+import { getAbsolutePath, isExist } from '../utils/get-absolute-path.js';
+
+const printList = async (folderPath) => {
+  const files = await fs.readdir(folderPath, { withFileTypes: true });
+  const list = files.map(item => ({
+    Name: item.name,
+    Type: (item.isFile()) ? 'file' : 'directory'
+  }));
+
+  list.sort((a, b) => {
+    if (a.Type === b.Type) return a.Name.localeCompare(b.Name);
+    return a.Type.localeCompare(b.Type);
+  });
+
+  console.table(list);
+};
+
+class NavigateCommands {
+  constructor(currentFolder, destinationFolder) {
+    this.currentFolder = currentFolder;
+    this.destinationFolder = destinationFolder;
+  }
+  async ls() {
+    await printList(this.currentFolder);
+    return this.currentFolder;
+  }
+  up() { return path.resolve(this.currentFolder, '..'); }
+  async cd() {
+    const newFolder = getAbsolutePath(this.currentFolder, this.destinationFolder);
+    if (await isExist(newFolder)) return newFolder;
+    // return this.currentFolder;
+    throw new Error('incorrect folder');
+  }
+
+  // static navCommandsList() {
+  //   const prototype = Object.getPrototypeOf(this.prototype);
+  //   return Object.getOwnPropertyNames(prototype).filter(name => typeof prototype[name] === 'function');
+  // }
+}
+
+const navCommandsList = Object
+  .getOwnPropertyNames(NavigateCommands.prototype)
+  .filter(propertyName => propertyName !== 'constructor');
+
+const navigate = async (cmd, currentFolder, destinationFolder) => {
+  const navCommands = new NavigateCommands(currentFolder, destinationFolder);
+  return navCommands[cmd]();
+};
+
+export { navigate, navCommandsList };
