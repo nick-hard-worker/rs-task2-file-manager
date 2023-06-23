@@ -8,7 +8,7 @@ import { getAbsolutePath } from './utils/get-absolute-path.js';
 
 import { osInfo } from './command-handlers/osCmd.js';
 import { calculateHash } from './command-handlers/calcHash.js';
-import { compress, decompress } from './command-handlers/archive.js';
+import { archive } from './command-handlers/archive.js';
 
 const args = parseArgs();
 const userName = args.username || 'Anonymous';
@@ -29,22 +29,17 @@ rl.on('line', async (input) => {
       const hash = await calculateHash(filePath);
       console.log(hash);
     }
-    if (cmd.command === 'compress') {
+
+    if (cmd.command === 'compress' || cmd.command === 'decompress') {
       const sourcePath = getAbsolutePath(currentFolder, cmd.arg1);
       const targetPath = getAbsolutePath(currentFolder, cmd.arg2);
 
-      await compress(sourcePath, targetPath);
-    }
-    if (cmd.command === 'decompress') {
-      const sourcePath = getAbsolutePath(currentFolder, cmd.arg1);
-      const targetPath = getAbsolutePath(currentFolder, cmd.arg2);
-
-      await decompress(sourcePath, targetPath);
+      await archive(cmd.command, sourcePath, targetPath);
     }
 
     cliOutput.currentPath(currentFolder);
   }
-  catch {
+  catch (err) {
     cliOutput.invalidInput();
     cliOutput.currentPath(currentFolder);
   }
