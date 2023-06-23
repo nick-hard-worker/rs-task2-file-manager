@@ -35,19 +35,18 @@ class NavigateCommands {
     throw new Error('incorrect folder');
   }
 
-  // static navCommandsList() {
-  //   const prototype = Object.getPrototypeOf(this.prototype);
-  //   return Object.getOwnPropertyNames(prototype).filter(name => typeof prototype[name] === 'function');
-  // }
+  static getCommandsList() {
+    return Object
+      .getOwnPropertyNames(this.prototype)
+      .filter(propertyName => propertyName !== 'constructor');
+  }
 }
-
-const navCommandsList = Object
-  .getOwnPropertyNames(NavigateCommands.prototype)
-  .filter(propertyName => propertyName !== 'constructor');
 
 const navigate = async (cmd, currentFolder, destinationFolder) => {
   const navCommands = new NavigateCommands(currentFolder, destinationFolder);
   return navCommands[cmd]();
 };
+
+const navCommandsList = NavigateCommands.getCommandsList();
 
 export { navigate, navCommandsList };

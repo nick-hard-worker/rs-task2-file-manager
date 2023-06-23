@@ -27,15 +27,19 @@ class FileCommands {
     await this.rm();
   }
   async rm() { await fs.rm(this.filePath); }
-};
 
-const fsActionList = Object
-  .getOwnPropertyNames(FileCommands.prototype)
-  .filter(propertyName => propertyName !== 'constructor');
+  static getFileActions() {
+    return Object
+      .getOwnPropertyNames(this.prototype)
+      .filter(propertyName => propertyName !== 'constructor');
+  }
+};
 
 const fsAction = async (cmd, filePath, destinationPath) => {
   const fsCommands = new FileCommands(filePath, destinationPath);
   return fsCommands[cmd]();
 };
+
+const fsActionList = FileCommands.getFileActions();
 
 export { fsAction, fsActionList };
