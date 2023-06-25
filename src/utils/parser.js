@@ -15,7 +15,8 @@ const parseArgs = () => {
 };
 
 const parseCmd = (line, currentFolder) => {
-  const arrFromLine = line.split(' ');
+  // const arrFromLine = line.split(' ');
+  const arrFromLine = line.match(/"[^"]+"|'[^']+'|\S+/g);
   const cmd = {
     command: arrFromLine[0],
     arg1: arrFromLine[1]?.replace(/^--/, ''),
@@ -23,8 +24,8 @@ const parseCmd = (line, currentFolder) => {
   };
 
   if (cmd.command !== 'os') {
-    cmd.arg1 = getAbsolutePath(currentFolder, cmd.arg1 || '');
-    cmd.arg2 = getAbsolutePath(currentFolder, cmd.arg2 || '');
+    cmd.arg1 = getAbsolutePath(currentFolder, cmd.arg1?.replace(/['"]/g, '') || '');
+    cmd.arg2 = getAbsolutePath(currentFolder, cmd.arg2?.replace(/['"]/g, '') || '');
   }
 
   return cmd;
