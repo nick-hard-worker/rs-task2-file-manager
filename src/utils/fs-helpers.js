@@ -6,10 +6,4 @@ const getAbsolutePath = (currentFolder, targetPath) => {
   return path.resolve(currentFolder, targetPath);
 };
 
-async function isExist(path) {
-  return await fs.access(path)
-    .then(() => true)
-    .catch(() => false);
-};
-
-export { getAbsolutePath, isExist };
+export { getAbsolutePath };
