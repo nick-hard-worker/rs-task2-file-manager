@@ -22,15 +22,26 @@ cliOutput.currentPath(currentFolder);
 const rlOps = { input: process.stdin, output: process.stdout };
 const rl = readline.createInterface(rlOps);
 
+const closeApp = () => {
+  cliOutput.sayBye(userName);
+  rl.close();
+  process.exit(0);
+};
+
 rl.on('line', async (input) => {
+  if (input === '.exit') closeApp();
+
   try {
     const cmd = parseCmd(input);
-    // console.log('Received: ', cmd);
-    if (cmd.command === 'os') console.log(osInfo(cmd));
+    if (cmd.command === 'os') {
+      console.log(osInfo(cmd));
+      return;
+    };
     if (cmd.command === 'hash') {
       const filePath = getAbsolutePath(currentFolder, cmd.arg1);
       const hash = await calculateHash(filePath);
       console.log(hash);
+      return;
     }
 
     if (cmd.command === 'compress' || cmd.command === 'decompress') {
@@ -38,10 +49,12 @@ rl.on('line', async (input) => {
       const targetPath = getAbsolutePath(currentFolder, cmd.arg2);
 
       await archive(cmd.command, sourcePath, targetPath);
+      return;
     }
 
     if (navCommandsList.includes(cmd.command)) {
       currentFolder = await navigate(cmd.command, currentFolder, cmd.arg1);
+      return;
     };
 
     if (fsActionList.includes(cmd.command)) {
@@ -49,14 +62,15 @@ rl.on('line', async (input) => {
       const targetPath = getAbsolutePath(currentFolder, cmd.arg2 || '');
 
       await fsAction(cmd.command, sourcePath, targetPath);
+      return;
     };
-
-    cliOutput.currentPath(currentFolder);
   }
   catch (err) {
     cliOutput.invalidInput();
+  }
+  finally {
     cliOutput.currentPath(currentFolder);
   }
 });
 
-// rl.close();
+rl.on("SIGINT", () => closeApp()); // press CTRL+C
