@@ -26,7 +26,7 @@ class FileCommands {
     await streamingCopy(this.filePath, this.destinationPath);
     await this.rm();
   }
-  async rm() { await fs.rm(this.filePath); }
+  async rm() { await fs.unlink(this.filePath); }
 
   static getFileActions() {
     return Object

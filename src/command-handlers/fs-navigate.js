@@ -5,10 +5,12 @@ import { getAbsolutePath, isExist } from '../utils/get-absolute-path.js';
 
 const printList = async (folderPath) => {
   const files = await fs.readdir(folderPath, { withFileTypes: true });
-  const list = files.map(item => ({
-    Name: item.name,
-    Type: (item.isFile()) ? 'file' : 'directory'
-  }));
+  const list = files
+    .filter(item => { return item.isFile() || item.isDirectory(); })
+    .map(item => ({
+      Name: item.name,
+      Type: item.isDirectory() ? 'directory' : 'file'
+    }));
 
   list.sort((a, b) => {
     if (a.Type === b.Type) return a.Name.localeCompare(b.Name);
