@@ -64,6 +64,7 @@ rl.on('line', async (input) => {
       await fsAction(cmd.command, sourcePath, targetPath);
       return;
     };
+    throw new Error('No such command');
   }
   catch (err) {
     cliOutput.invalidInput();
