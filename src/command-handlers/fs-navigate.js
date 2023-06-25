@@ -31,9 +31,10 @@ class NavigateCommands {
   up() { return path.resolve(this.currentFolder, '..'); }
   async cd() {
     const newFolder = getAbsolutePath(this.currentFolder, this.destinationFolder);
-    if (await isExist(newFolder)) return newFolder;
-    // return this.currentFolder;
-    throw new Error('incorrect folder');
+    const stats = await fs.stat(newFolder); // throw error if not exist
+    if (stats.isDirectory()) return newFolder;
+
+    throw new Error('incorrect folder'); // exist file instead folder
   }
 
   static getCommandsList() {

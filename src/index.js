@@ -32,13 +32,13 @@ rl.on('line', async (input) => {
     };
 
     if (cmd.command === 'hash') {
-      const hash = await calculateHash(filePath);
+      const hash = await calculateHash(cmd.arg1);
       console.log(hash);
       return;
     }
 
     if (['compress', 'decompress'].includes(cmd.command)) {
-      await archive(cmd.command, sourcePath, targetPath);
+      await archive(cmd.command, cmd.arg1, cmd.arg2);
       return;
     }
 
