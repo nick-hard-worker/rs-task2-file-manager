@@ -1,5 +1,5 @@
 import * as fs from 'node:fs/promises';
-import { constants as fsConstants, createReadStream, createWriteStream } from 'node:fs';
+import { createReadStream, createWriteStream } from 'node:fs';
 import path from 'node:path';
 import { pipeline } from 'node:stream/promises';
 
@@ -35,9 +35,9 @@ class FileCommands {
   }
 };
 
-const fsAction = async (cmd, filePath, destinationPath) => {
+const fsAction = async (command, filePath, destinationPath) => {
   const fsCommands = new FileCommands(filePath, destinationPath);
-  return fsCommands[cmd]();
+  await fsCommands[command]();
 };
 
 const fsActionList = FileCommands.getFileActions();

@@ -1,3 +1,5 @@
+import { getAbsolutePath } from './fs-helpers.js';
+
 const parseArgs = () => {
   const args = process.argv.slice(2);
 
@@ -12,13 +14,20 @@ const parseArgs = () => {
   return orderedArgs;
 };
 
-const parseCmd = (line) => {
+const parseCmd = (line, currentFolder) => {
   const arrFromLine = line.split(' ');
-  return {
+  const cmd = {
     command: arrFromLine[0],
     arg1: arrFromLine[1]?.replace(/^--/, ''),
     arg2: arrFromLine[2]
   };
+
+  if (cmd.command !== 'os') {
+    cmd.arg1 = getAbsolutePath(currentFolder, cmd.arg1 || '');
+    cmd.arg2 = getAbsolutePath(currentFolder, cmd.arg2 || '');
+  }
+
+  return cmd;
 };
 
 export { parseArgs, parseCmd };

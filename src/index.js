@@ -4,7 +4,6 @@ import * as readline from 'node:readline/promises';
 
 import * as cliOutput from './utils/cliOutput.js';
 import { parseArgs, parseCmd } from './utils/parser.js';
-import { getAbsolutePath } from './utils/get-absolute-path.js';
 
 import { osInfo } from './command-handlers/osCmd.js';
 import { calculateHash } from './command-handlers/calcHash.js';
@@ -22,33 +21,23 @@ cliOutput.currentPath(currentFolder);
 const rlOps = { input: process.stdin, output: process.stdout };
 const rl = readline.createInterface(rlOps);
 
-const closeApp = () => {
-  cliOutput.sayBye(userName);
-  rl.close();
-  process.exit(0);
-};
-
 rl.on('line', async (input) => {
   if (input === '.exit') closeApp();
 
   try {
-    const cmd = parseCmd(input);
+    const cmd = parseCmd(input, currentFolder);
     if (cmd.command === 'os') {
       osInfo(cmd);
       return;
     };
 
     if (cmd.command === 'hash') {
-      const filePath = getAbsolutePath(currentFolder, cmd.arg1);
       const hash = await calculateHash(filePath);
       console.log(hash);
       return;
     }
 
     if (['compress', 'decompress'].includes(cmd.command)) {
-      const sourcePath = getAbsolutePath(currentFolder, cmd.arg1);
-      const targetPath = getAbsolutePath(currentFolder, cmd.arg2);
-
       await archive(cmd.command, sourcePath, targetPath);
       return;
     }
@@ -59,10 +48,7 @@ rl.on('line', async (input) => {
     };
 
     if (fsActionList.includes(cmd.command)) {
-      const sourcePath = getAbsolutePath(currentFolder, cmd.arg1 || '');
-      const targetPath = getAbsolutePath(currentFolder, cmd.arg2 || '');
-
-      await fsAction(cmd.command, sourcePath, targetPath);
+      await fsAction(cmd.command, cmd.arg1, cmd.arg2);
       return;
     };
 
@@ -77,3 +63,9 @@ rl.on('line', async (input) => {
 });
 
 rl.on("SIGINT", () => closeApp()); // press CTRL+C
+
+function closeApp() {
+  cliOutput.sayBye(userName);
+  rl.close();
+  process.exit(0);
+};

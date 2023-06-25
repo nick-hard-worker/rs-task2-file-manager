@@ -1,7 +1,7 @@
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { getAbsolutePath, isExist } from '../utils/get-absolute-path.js';
+import { getAbsolutePath, isExist } from '../utils/fs-helpers.js';
 
 const printList = async (folderPath) => {
   const files = await fs.readdir(folderPath, { withFileTypes: true });
