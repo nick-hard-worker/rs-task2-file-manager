@@ -37,6 +37,7 @@ rl.on('line', async (input) => {
       console.log(osInfo(cmd));
       return;
     };
+
     if (cmd.command === 'hash') {
       const filePath = getAbsolutePath(currentFolder, cmd.arg1);
       const hash = await calculateHash(filePath);
@@ -44,7 +45,7 @@ rl.on('line', async (input) => {
       return;
     }
 
-    if (cmd.command === 'compress' || cmd.command === 'decompress') {
+    if (['compress', 'decompress'].includes(cmd.command)) {
       const sourcePath = getAbsolutePath(currentFolder, cmd.arg1);
       const targetPath = getAbsolutePath(currentFolder, cmd.arg2);
 
@@ -64,6 +65,7 @@ rl.on('line', async (input) => {
       await fsAction(cmd.command, sourcePath, targetPath);
       return;
     };
+
     throw new Error('No such command');
   }
   catch (err) {
