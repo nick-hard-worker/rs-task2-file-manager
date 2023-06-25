@@ -34,7 +34,7 @@ rl.on('line', async (input) => {
   try {
     const cmd = parseCmd(input);
     if (cmd.command === 'os') {
-      console.log(osInfo(cmd));
+      osInfo(cmd);
       return;
     };
 

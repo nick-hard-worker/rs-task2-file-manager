@@ -10,6 +10,9 @@ const getFromOs = {
 };
 
 export const osInfo = (cmd) => {
-  return getFromOs[cmd.arg1] || 'Invalid input';
+  const result = getFromOs[cmd.arg1];
+  if (!result) throw new Error('not such OS argument');
+
+  console.log(result);
 };
 
