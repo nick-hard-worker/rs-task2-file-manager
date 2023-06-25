@@ -10,12 +10,11 @@ const printList = async (folderPath) => {
     .map(item => ({
       Name: item.name,
       Type: item.isDirectory() ? 'directory' : 'file'
-    }));
-
-  list.sort((a, b) => {
-    if (a.Type === b.Type) return a.Name.localeCompare(b.Name);
-    return a.Type.localeCompare(b.Type);
-  });
+    }))
+    .sort((a, b) => {
+      if (a.Type === b.Type) return a.Name.localeCompare(b.Name);
+      return a.Type.localeCompare(b.Type);
+    });
 
   console.table(list);
 };
