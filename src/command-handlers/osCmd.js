@@ -3,7 +3,8 @@ import path from 'node:path';
 
 const getFromOs = {
   EOL: os.EOL,
-  cpus: os.cpus().map(({ model, speed }) => { return { model, speed }; }),
+  cpus: ['Amount of CPUS: ' + os.availableParallelism()]
+    .concat(os.cpus().map(({ model }) => { return { model }; })),
   homedir: path.resolve(os.homedir()),
   username: os.userInfo().username,
   architecture: os.arch()
